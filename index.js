@@ -14,9 +14,9 @@ function getText(e) {
 }
 
 function RuncmdAll(cmd, self) {
-	const cfg = NIL._vanilla.cfg;
+	const vcfg = NIL._vanilla.cfg;
     NIL.SERVERS.forEach((s, k) => {
-        s.sendCMD(cmd, (dt) => { NIL.bots.getBot(self).sendGroupMsg(cfg.group.main, `${k}\n${dt}`) });
+        s.sendCMD(cmd, (dt) => { NIL.bots.getBot(self).sendGroupMsg(vcfg.group.main, `${k}\n${dt}`) });
     });
 }
 class AutoWL extends NIL.ModuleBase{
