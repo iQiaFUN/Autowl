@@ -1,4 +1,5 @@
-const cmd = "申请白名单";
+const path = require('path');
+const cfg = JSON.parse(NIL.IO.readFrom(path.join(__dirname, 'config.json')));
 
 function getText(e) {
     var rt = '';
@@ -18,23 +19,22 @@ function RuncmdAll(cmd, self) {
         s.sendCMD(cmd, (dt) => { NIL.bots.getBot(self).sendGroupMsg(cfg.group.main, `${k}\n${dt}`) });
     });
 }
-
-function onStart(api){
-	api.listen('onMainMessageReceived',(e)=>{
-		let t = getText(e);
-		if(t == cmd){
-			if(NIL._vanilla.wl_exists(e.sender.qq)){
-				let xbox = NIL._vanilla.get_xboxid(e.sender.qq);
-                RuncmdAll(`allowlist add "${xbox}"`, e.self_id);
-				e.reply(`尝试添加${e.sender.qq}的白名单(${xbox})到所有服务器`);
-			}else{
-				e.reply('你还没绑定xboxid!',true);
-			}
-		}
-	});
-}
-
-module.exports = {
-    onStart,
+class AutoWL extends NIL.ModuleBase{
+    onStart(api){
+        api.listen('onMainMessageReceived',(e)=>{
+            let t = getText(e);
+            if(t == cfg.cmd){
+                if(NIL._vanilla.wl_exists(e.sender.qq)){
+                    let xbox = NIL._vanilla.get_xboxid(e.sender.qq);
+                    RuncmdAll(`allowlist add "${xbox}"`, e.self_id);
+                    e.reply(`尝试添加${e.sender.qq}的白名单(${xbox})到所有服务器`);
+                }else{
+                    e.reply('你还没绑定xboxid!',true);
+                }
+            }
+        });
+    }
     onStop(){}
 }
+
+module.exports = new AutoWL;
